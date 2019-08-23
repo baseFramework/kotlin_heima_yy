@@ -18,12 +18,12 @@ abstract class BaseActivity:AppCompatActivity(),AnkoLogger {
 
 
     // 初始化数据
-    protected fun initDate(){
+    open protected fun initDate(){
 
     }
 
     // adapter listener
-    protected fun initListener(){
+    open protected fun initListener(){
 
     }
 
@@ -32,7 +32,7 @@ abstract class BaseActivity:AppCompatActivity(),AnkoLogger {
     abstract fun getLayoutId():Int
 
     // 弹出提示
-    protected  fun myToast(msg:String){
+    open protected  fun myToast(msg:String){
         runOnUiThread { toast(msg) }
     }
 
