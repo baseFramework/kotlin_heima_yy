@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 
@@ -34,6 +35,12 @@ abstract class BaseActivity:AppCompatActivity(),AnkoLogger {
     // 弹出提示
     open protected  fun myToast(msg:String){
         runOnUiThread { toast(msg) }
+    }
+
+    //开启 activity并且finish 当前界面
+    inline fun<reified T:BaseActivity> startActivityAndFinish(){
+        startActivity<T>()
+        finish()
     }
 
 
