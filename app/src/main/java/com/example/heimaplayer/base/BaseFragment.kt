@@ -32,7 +32,7 @@ abstract class BaseFragment:Fragment(),AnkoLogger {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initListener()
-        initDate()
+        initData()
 
     }
 
@@ -41,7 +41,7 @@ abstract class BaseFragment:Fragment(),AnkoLogger {
     }
 
     //数据初始化
-    protected  fun initDate(){
+    open fun initData(){
 
     }
 
