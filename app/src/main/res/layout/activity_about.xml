@@ -2,13 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-    <include layout="@layout/toolbar"></include>
-
-    <fragment
-
-        android:id="@+id/setting_fragment"
-            class="com.example.heimaplayer.ui.fragment.SettingFragment"
+    <TextView
+        android:text="这是一款免费的黑马视频播放器"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></fragment>
+            android:layout_height="match_parent"></TextView>
+
 </LinearLayout>
