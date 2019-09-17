@@ -1,26 +1,20 @@
 package com.example.heimaplayer.ui.fragment
+import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.heimaplayer.R
 import com.example.heimaplayer.adapter.HomeAdapter
 import com.example.heimaplayer.base.BaseFragment
-import com.example.heimaplayer.util.ThreadUtil
-import com.example.heimaplayer.util.URLProviderUtils
-import com.google.gson.Gson
-import  com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
-import com.itheima.player.model.bean.HomeBean
+import com.example.heimaplayer.presenter.impl.HomePresenterImpl
+import com.example.heimaplayer.view.HomeView
 import com.itheima.player.model.bean.HomeItemBean
 import kotlinx.android.synthetic.main.fragment_home.*
-import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
-
-class HomeFragment:BaseFragment() {
+class HomeFragment:BaseFragment(),HomeView {
 
     //适配
     val adapter by lazy { HomeAdapter() }
+    val presenter by lazy { HomePresenterImpl(this) }
     override fun initView(): View? {
       return View.inflate(context, R.layout.fragment_home,null)
     }
@@ -32,6 +26,16 @@ class HomeFragment:BaseFragment() {
 
 
         recycleView.adapter = adapter
+
+        // 初始化刷新控件
+        refreshLayout.setColorSchemeColors(Color.RED,Color.YELLOW,Color.BLUE)
+
+
+        refreshLayout.setOnRefreshListener {
+            // 刷新监听
+           // loadDatas()
+            presenter.loadDatas()
+        }
 
         // 监听列表滑动
         recycleView.addOnScrollListener(object:RecyclerView.OnScrollListener(){
@@ -57,7 +61,7 @@ class HomeFragment:BaseFragment() {
                         val lastPosition = manager.findLastVisibleItemPosition()
                         if(lastPosition == adapter.itemCount -1){
                             //最后一条已经显示了
-                            loadMore(adapter.itemCount-1)
+                            presenter.loadMore(adapter.itemCount-1)
                         }
                     }
                 }
@@ -70,85 +74,24 @@ class HomeFragment:BaseFragment() {
     }
 
     override  fun initData(){
-        loadDatas()
+        // 初始化数据
+        // loadDatas();
+       presenter.loadDatas()
     }
 
-    // 加载更多数据
-    private  fun loadMore(offset:Int){
-        val path = URLProviderUtils.getHomeUrl(offset,20)
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(path)
-            .get()
-            .build()
-        client.newCall(request).enqueue(object :Callback{
-
-            // 子线程调用
-            override fun onFailure(call: Call, e: IOException) {
-                println("获取数据失败:")
-                println(e)
-                myToast("获取数据失败")
-
-            }
-
-            //子线程调用
-            override fun onResponse(call: Call, response: Response) {
-                myToast("获取数据成功")
-                val result =  response.body()?.string()
-                val gson = Gson()
-                val home = gson.fromJson(result, HomeBean::class.java)
-                val list = home.items
-                //gson.fromJson<>()
-//                val list = gson.fromJson<List<HomeItemBean>>(result,object: TypeToken<List<HomeItemBean>>(){}.type)
-                println("获取数据成功:" + list.size)
-
-                // 刷新列表
-                ThreadUtil.runOnMainThread(object :Runnable{
-                    override fun run() {
-                        adapter.loadMore(list)
-                    }
-                })
-
-            }
-        })
+    override fun onError(message: String?) {
+       myToast("加载数据失败")
     }
 
-    private  fun loadDatas(){
-        val path = URLProviderUtils.getHomeUrl(0,20)
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(path)
-            .get()
-            .build()
-        client.newCall(request).enqueue(object :Callback{
+    override fun loadSuccess(list: List<HomeItemBean>) {
+        myToast("加载数据成功")
+        //隐藏刷新控件
+        refreshLayout.isRefreshing = false;
+        //刷新列表
+        adapter.updateList(list)
+    }
 
-            // 子线程调用
-            override fun onFailure(call: Call, e: IOException) {
-                println("获取数据失败:")
-                println(e)
-                myToast("获取数据失败")
-
-            }
-
-            //子线程调用
-            override fun onResponse(call: Call, response: Response) {
-                myToast("获取数据成功")
-                val result =  response.body()?.string()
-                val gson = Gson()
-                val home = gson.fromJson(result, HomeBean::class.java)
-                val list = home.items
-                //gson.fromJson<>()
-//                val list = gson.fromJson<List<HomeItemBean>>(result,object: TypeToken<List<HomeItemBean>>(){}.type)
-                println("获取数据成功:" + list.size)
-
-                // 刷新列表
-                ThreadUtil.runOnMainThread(object :Runnable{
-                    override fun run() {
-                        adapter.updateList(list)
-                    }
-                })
-
-            }
-        })
+    override fun loadMore(list: List<HomeItemBean>) {
+       adapter.loadMore(list)
     }
 }

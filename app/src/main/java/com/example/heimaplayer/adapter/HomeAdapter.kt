@@ -12,16 +12,21 @@ class HomeAdapter:RecyclerView.Adapter<HomeAdapter.HomeHolder>(){
     private var list = ArrayList<HomeItemBean>()
 
     // 更新数据
-    fun updateList(list: List<HomeItemBean>){
-        this.list.clear()
-        this.list.addAll(list)
-        notifyDataSetChanged()
+    fun updateList(list: List<HomeItemBean>?){
+       // if(list == null) return
+        list?.let {
+            this.list.clear()
+            this.list.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 
     // 加载更多数据
     fun loadMore(list:List<HomeItemBean>){
-        this.list.addAll(list)
-        notifyDataSetChanged()
+        list?.let {
+            this.list.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 
     class HomeHolder(itemView: View):RecyclerView.ViewHolder(itemView){
