@@ -30,7 +30,14 @@ class HomeAdapter:RecyclerView.Adapter<HomeAdapter.HomeHolder>(){
     }
 
     override fun onBindViewHolder(holder: HomeHolder, position: Int) {
+        // 条目数据
+        val data = list.get(position)
 
+        // 条目view
+        val itemView = holder.itemView as HomeItemView
+
+        // 条目刷新
+        itemView.setData(data)
     }
 
 }
