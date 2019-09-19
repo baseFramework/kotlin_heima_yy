@@ -14,19 +14,26 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import okhttp3.*
 import java.io.IOException
 
-class HomePresenterImpl(var homeView: HomeView):HomePresenter, ResponseHandler<HomeBean> {
+class HomePresenterImpl(var homeView: HomeView?):HomePresenter, ResponseHandler<HomeBean> {
+
+    // 解绑view 和 presenter
+    fun destoryView(){
+        if(homeView != null){
+            homeView = null
+        }
+    }
 
     //失败
     override fun onError(type:Int,msg: String?) {
-       homeView.onError(msg)
+       homeView?.onError(msg)
     }
 
     // 加载数据成功
     override fun onSuccess(type:Int,result: HomeBean) {
         // 区分初始化  加载更多
         when(type){
-            HomePresenter.TYPE_INIT_OR_REFRESH -> homeView.loadSuccess(result.items)
-            HomePresenter.TYPE_LOAD_MORE -> homeView.loadMore(result.items)
+            HomePresenter.TYPE_INIT_OR_REFRESH -> homeView?.loadSuccess(result.items)
+            HomePresenter.TYPE_LOAD_MORE -> homeView?.loadMore(result.items)
         }
     }
 
