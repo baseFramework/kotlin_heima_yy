@@ -9,14 +9,14 @@ import com.example.heimaplayer.base.BaseFragment
 import com.example.heimaplayer.presenter.impl.HomePresenterImpl
 import com.example.heimaplayer.view.HomeView
 import com.itheima.player.model.bean.HomeItemBean
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_list.*
 class HomeFragment:BaseFragment(),HomeView {
 
     //适配
     val adapter by lazy { HomeAdapter() }
     val presenter by lazy { HomePresenterImpl(this) }
     override fun initView(): View? {
-      return View.inflate(context, R.layout.fragment_home,null)
+      return View.inflate(context, R.layout.fragment_list,null)
     }
 
     override fun initListener(){

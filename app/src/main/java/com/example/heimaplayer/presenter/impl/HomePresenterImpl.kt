@@ -10,7 +10,6 @@ import com.example.heimaplayer.util.URLProviderUtils
 import com.example.heimaplayer.view.HomeView
 import com.google.gson.Gson
 import com.itheima.player.model.bean.HomeBean
-import kotlinx.android.synthetic.main.fragment_home.*
 import okhttp3.*
 import java.io.IOException
 
